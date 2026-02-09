@@ -30,9 +30,7 @@ class Retriever:
     Returns example chunks
     """
 
-
-
-    #Replace these demo chunks with real data from BIFS614
+#Replace these demo chunks with real data from BIFS614
 #Higher score = higher relevance 
 #Lower score = lower relevance 
 #Score is optional, may or may not keep it
