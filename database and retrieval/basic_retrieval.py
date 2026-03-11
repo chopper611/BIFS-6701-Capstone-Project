@@ -22,39 +22,45 @@ qdrant_client = QdrantClient(url = qdrant_url, grpc_port = 6334, prefer_grpc = T
 def generate_embeddings(query):
     response = openai_client.embeddings.create(input = query, model = embedding_model)
     return response.data[0].embedding
+    
+query = ""
 
-#get user input
-query = input("What is your question? ")
+while query != "exit":
+    
+    #get user input
+    query = input('What is your question? (type "exit" to quit): ')
 
-#create embedding from user query
-query_vector = generate_embeddings(query)
+    if query != "exit":
 
-#perform similarity search (can also add in filering condition if needed)
-search_results = qdrant_client.query_points(
-    collection_name = collection_name,
-    query = query_vector,
-    query_filter = None,
-    limit = 1
-    ).points
+        #create embedding from user query
+        query_vector = generate_embeddings(query)
 
-#retrieve relevant context
-context = [hit.payload for hit in search_results]
+        #perform similarity search (can also add in filering condition if needed)
+        search_results = qdrant_client.query_points(
+            collection_name = collection_name,
+            query = query_vector,
+            query_filter = None,
+            limit = 1
+            ).points
 
-#customize prompt
-prompt = f"use the following context to answer: {context}"
+        #retrieve relevant context
+        context = [hit.payload for hit in search_results]
 
-#use an openai chatgpt model to obtain answer
-answer = openai_client.chat.completions.create(
-    model = "gpt-4o-mini",
-    messages = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": query}
-        ],
-        temperature = 0
-    )
+        #customize prompt
+        prompt = f"use the following context to answer: {context}"
 
-#print chatgpt answer
-print(answer.choices[0].message.content)
+        #use an openai chatgpt model to obtain answer
+        answer = openai_client.chat.completions.create(
+            model = "gpt-4o-mini",
+            messages = [
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": query}
+                ],
+                temperature = 0
+            )
+
+        #print chatgpt answer
+        print(answer.choices[0].message.content)
 
 
 
