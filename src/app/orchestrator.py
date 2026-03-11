@@ -2,10 +2,11 @@
 # Source- https://www.ibm.com/think/topics/llm-orchestration
 
 
+from .basic_retrieval import BasicRetriever
 from .types import Mode, AppResponse
-from .retriever import Retriever
 from.llm_client import LLM_Client
 from .prompts import system_prompt, build_context
+from .types import AppResponse, Mode
 
 class orchestrator: 
 """
@@ -14,12 +15,12 @@ Application flow: user question - retriever - context building - LLM - final out
 """
 
 #Reference self for the retriever and LLM
-def __init__(self, retriever: Retriever, LLM, LLM_Client)
-    self.retriever = retriever 
+def __init__(self, retriever: BasicRetriever, LLM, LLM_Client)
+    self.retriever = retriever
     self.llm = llm
 
 
-def answer(self, question: str, mode: Mode = "study", k: int = 4) -> AppResponse
+def answer(self, question: str, mode: Mode, k:int = 4) -> AppResponse:
     #Retrieve relevant course content
     chunks = self.retriever. retrieve(question, k=k)
     #Convert chunks into a context block
