@@ -3,8 +3,8 @@
 import argparse
 import json
 import sys
-import typing import Optional 
 
+from typing import Optional 
 from.types import Mode, AppResponse
 from .basic_retrieval import BasicRetriever
 from .llm_client import LLM_Client
