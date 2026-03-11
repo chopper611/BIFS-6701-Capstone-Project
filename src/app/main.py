@@ -6,7 +6,7 @@ import sys
 import typing import Optional 
 
 from.types import Mode, AppResponse
-from .retriever import Retriever 
+from .basic_retrieval import BasicRetriever
 from .llm_client import LLM_Client
 from .orchestrator import Orchestrator
 
@@ -58,7 +58,7 @@ print(f"[{i}] {source} (score={score})")
 #create and return a fully wired Orchestrator- can swap retriever/LLM if needed
 def build_pipeline() -> Orchestrator:
 #create pipeline components
-retriever = Retriever()
+retriever = BasicRetriever()
 llm = llm_client(model_name = "stub-llm") 
 orchestrator = orchestrator(retriever,llm)
 
