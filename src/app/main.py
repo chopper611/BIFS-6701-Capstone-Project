@@ -128,4 +128,47 @@ def run_one_shot(question: str, mode: Mode, k: int, json_out: bool) -> int:
     return 0
 
 
+
 def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="CLI for the LLM application flow (Retriever -> Context -> LLM)."
+    )
+    parser.add_argument(
+        "-m", "--mode",
+        help="Mode to run in (study/assessment). Default: study",
+        default="study"
+    )
+    parser.add_argument(
+        "-k", "--topk",
+        help="Top-k chunks to retrieve",
+        type=int,
+        default=4
+    )
+    parser.add_argument(
+        "--json",
+        help="Output JSON instead of pretty text",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-q", "--question",
+        help="One-shot question (non-interactive mode). If omitted, starts REPL.",
+        default=None
+    )
+
+    args = parser.parse_args(argv)
+    mode = parse_mode(args.mode)
+
+    if args.question:
+        return run_one_shot(args.question, mode=mode, k=args.topk, json_out=args.json)
+    else:
+        run_repl(mode=mode, k=args.topk, json_out=args.json)
+        return 0
+        
+    #display the results
+    display_response(response)
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+    if __name__ == "__main__": 
+        run()
+
