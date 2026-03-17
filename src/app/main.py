@@ -66,25 +66,24 @@ def display_response(response) -> None:
         print("-" * 60)
 
 
-#create and return a fully wired Orchestrator- can swap retriever/LLM if needed
+
 def build_pipeline() -> Orchestrator:
-    #create pipeline components
     retriever = BasicRetriever()
-    llm = LLM_Client(model_name="stub-llm")
-    orchestrator = Orchestrator(retriever, llm)
-    return orchestrator
+    llm = LLM_Client()  
+    return Orchestrator(retriever, llm)
 
 
 #main CLI loop for testing application flow
-def run_repl(mode: Mode, k: int, json_out: bool) -> None:
+
+def run_repl(k: int, json_out: bool) -> None:
+    mode = choose_mode_interactive()
     orch = build_pipeline()
     print("BIFS 614 Custom LLM Application Flow Demo")
     print("Type 'quit' to exit.\n")
 
-    #loop to ask user questions until they quit
     while True:
         try:
-            question = input("\n Please enter your question: ").strip()
+            question = input("\nPlease enter your question: ").strip()
         except (EOFError, KeyboardInterrupt):
             print("\nGoodbye!")
             break
@@ -103,13 +102,11 @@ def run_repl(mode: Mode, k: int, json_out: bool) -> None:
             print(f"Error while answering: {e}", file=sys.stderr)
             continue
 
-        # If AppResponse is pydantic: .model_dump() or .dict()
         if json_out:
-            payload = response.dict() if hasattr(response, "dict") else getattr(response, "__dict__", {})
+            payload = response.dict() if hasattr(response, "dict") else response.__dict__
             print(json.dumps(payload, ensure_ascii=False, indent=2))
         else:
             display_response(response)
-
 
 #single question mode, non-interactive for Powershell scripting
 def run_one_shot(question: str, mode: Mode, k: int, json_out: bool) -> int:
@@ -127,17 +124,11 @@ def run_one_shot(question: str, mode: Mode, k: int, json_out: bool) -> int:
         display_response(response)
     return 0
 
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="CLI for the LLM application flow (Retriever -> Context -> LLM)."
     )
-    parser.add_argument(
-        "-m", "--mode",
-        help="Mode to run in (study/assessment). Default: study",
-        default="study"
-    )
+
     parser.add_argument(
         "-k", "--topk",
         help="Top-k chunks to retrieve",
@@ -156,15 +147,15 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     args = parser.parse_args(argv)
-    mode = parse_mode(args.mode)
-
 
     if args.question:
+        # one-shot path still needs a mode
+        mode = choose_mode_interactive()
         return run_one_shot(args.question, mode=mode, k=args.topk, json_out=args.json)
     else:
-        run_repl(mode=mode, k=args.topk, json_out=args.json)
+        # REPL path – run_repl handles mode selection
+        run_repl(k=args.topk, json_out=args.json)
         return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
