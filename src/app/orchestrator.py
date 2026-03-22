@@ -4,7 +4,7 @@
 from .basic_retrieval import BasicRetriever
 from .llm_client import LLM_Client
 from .prompts import system_prompt, build_context
-from .types import AppResponse, Mode
+from .app_types import AppResponse, Mode
 
 
 class Orchestrator:

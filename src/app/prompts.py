@@ -1,6 +1,6 @@
 # src/app/prompts/prompts.py
 
-from ..types import Mode, Chunk
+from .app_types import Mode, Chunk
 
 def system_prompt(mode: Mode) -> str:
     if mode == Mode.STUDY:

@@ -5,7 +5,7 @@ import json
 import sys
 from typing import Optional
 
-from .types import Mode, AppResponse
+from .app_types import Mode, AppResponse
 from .basic_retrieval import BasicRetriever
 from .llm_client import LLM_Client
 from .orchestrator import Orchestrator
