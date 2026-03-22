@@ -1,7 +1,6 @@
 import os
 from openai import OpenAI
 from qdrant_client import QdrantClient
-from qdrant_client.models import PointStruct, VectorParams, Distance
 from dotenv import load_dotenv
 
 #load environment variables from .env file
